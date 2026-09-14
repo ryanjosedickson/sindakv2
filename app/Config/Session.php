@@ -3,126 +3,65 @@
 namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
-use CodeIgniter\Session\Handlers\BaseHandler;
-use CodeIgniter\Session\Handlers\FileHandler;
+use CodeIgniter\Session\Handlers\DatabaseHandler;
 
 class Session extends BaseConfig
 {
     /**
-     * --------------------------------------------------------------------------
-     * Session Driver
-     * --------------------------------------------------------------------------
-     *
-     * The session storage driver to use:
-     * - `CodeIgniter\Session\Handlers\ArrayHandler` (for testing)
-     * - `CodeIgniter\Session\Handlers\FileHandler`
-     * - `CodeIgniter\Session\Handlers\DatabaseHandler`
-     * - `CodeIgniter\Session\Handlers\MemcachedHandler`
-     * - `CodeIgniter\Session\Handlers\RedisHandler`
-     *
-     * @var class-string<BaseHandler>
+     * Pakai database handler, bukan file — supaya Super Admin bisa
+     * paksa-invalidate session Operator Sekolah/Kampus tertentu langsung
+     * lewat query, tanpa perlu akses filesystem server.
      */
-    public string $driver = FileHandler::class;
+    public string $driver = DatabaseHandler::class;
 
     /**
-     * --------------------------------------------------------------------------
-     * Session Cookie Name
-     * --------------------------------------------------------------------------
-     *
-     * The session cookie name, must contain only [0-9a-z_-] characters
+     * Nama cookie session dibuat khas ("sindak_v2_session"), BUKAN default
+     * "ci_session". Ini penting karena SINDAK lama (port 8081) dan SINDAK
+     * baru bisa jalan berdampingan di localhost selama masa transisi —
+     * kalau nama cookie sama, sesi keduanya bisa saling menimpa/bentrok
+     * di browser yang sama.
      */
-    public string $cookieName = 'ci_session';
+    public string $cookieName = 'sindak_v2_session';
 
     /**
-     * --------------------------------------------------------------------------
-     * Session Expiration
-     * --------------------------------------------------------------------------
-     *
-     * The number of SECONDS you want the session to last.
-     * Setting to 0 (zero) means expire when the browser is closed.
+     * Masa aktif session dalam detik. 7200 = 2 jam tanpa aktivitas.
+     * Operator biasanya kerja input data dalam sesi cukup panjang,
+     * jadi 2 jam cukup wajar — bisa disesuaikan kalau kerasa kurang/lebih.
      */
     public int $expiration = 7200;
 
     /**
-     * --------------------------------------------------------------------------
-     * Session Save Path
-     * --------------------------------------------------------------------------
-     *
-     * The location to save sessions to and is driver dependent.
-     *
-     * For the 'files' driver, it's a path to a writable directory.
-     * WARNING: Only absolute paths are supported!
-     *
-     * For the 'database' driver, it's a table name.
-     * Please read up the manual for the format with other session drivers.
-     *
-     * IMPORTANT: You are REQUIRED to set a valid save path!
+     * Untuk database handler, savePath diisi NAMA TABEL, bukan path folder.
      */
-    public string $savePath = WRITEPATH . 'session';
+    public string $savePath = 'ci_sessions';
 
     /**
-     * --------------------------------------------------------------------------
-     * Session Match IP
-     * --------------------------------------------------------------------------
-     *
-     * Whether to match the user's IP address when reading the session data.
-     *
-     * WARNING: If you're using the database driver, don't forget to update
-     *          your session table's PRIMARY KEY when changing this setting.
+     * false = sesuai migration yang sudah dibuat (default saat generate).
+     * Kalau nanti diubah ke true, migration ci_sessions perlu di-generate
+     * ulang (primary key-nya beda), jadi JANGAN diubah sendiri tanpa
+     * regenerate migration.
      */
     public bool $matchIP = false;
 
     /**
-     * --------------------------------------------------------------------------
-     * Session Time to Update
-     * --------------------------------------------------------------------------
-     *
-     * How many seconds between CI regenerating the session ID.
+     * Regenerasi session ID setiap 5 menit (300 detik) untuk mitigasi
+     * session fixation, tanpa terlalu sering mengganggu request AJAX
+     * berurutan (konsisten dengan keputusan CSRF Opsi B sebelumnya).
      */
     public int $timeToUpdate = 300;
 
     /**
-     * --------------------------------------------------------------------------
-     * Session Regenerate Destroy
-     * --------------------------------------------------------------------------
-     *
-     * Whether to destroy session data associated with the old session ID
-     * when auto-regenerating the session ID. When set to FALSE, the data
-     * will be later deleted by the garbage collector.
+     * false: saat regenerasi ID, data session lama TIDAK langsung dihapus
+     * (ada race-condition window singkat). Ini yang direkomendasikan CI4
+     * untuk kompatibilitas request AJAX yang mungkin terjadi hampir
+     * bersamaan — sejalan dengan alasan CSRF Opsi B.
      */
     public bool $regenerateDestroy = false;
 
     /**
-     * --------------------------------------------------------------------------
-     * Session Database Group
-     * --------------------------------------------------------------------------
-     *
-     * DB Group for the database session.
+     * null = pakai default database group (yang sudah dikonfigurasi ke
+     * db-sindak di .env). Diisi eksplisit hanya kalau nanti session mau
+     * disimpan di database/group terpisah dari data utama.
      */
     public ?string $DBGroup = null;
-
-    /**
-     * --------------------------------------------------------------------------
-     * Lock Retry Interval (microseconds)
-     * --------------------------------------------------------------------------
-     *
-     * This is used for RedisHandler.
-     *
-     * Time (microseconds) to wait if lock cannot be acquired.
-     * The default is 100,000 microseconds (= 0.1 seconds).
-     */
-    public int $lockRetryInterval = 100_000;
-
-    /**
-     * --------------------------------------------------------------------------
-     * Lock Max Retries
-     * --------------------------------------------------------------------------
-     *
-     * This is used for RedisHandler.
-     *
-     * Maximum number of lock acquisition attempts.
-     * The default is 300 times. That is lock timeout is about 30 (0.1 * 300)
-     * seconds.
-     */
-    public int $lockMaxRetries = 300;
 }
