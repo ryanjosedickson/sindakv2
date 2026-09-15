@@ -8,7 +8,6 @@ $routes->get('/', 'Home::index');
 // ============================================
 // AUTH ROUTES
 // ============================================
-
 $routes->get('login', 'Auth::index');
 $routes->post('login', 'Auth::attemptLogin');
 $routes->get('logout', 'Auth::logout', ['filter' => 'auth']);
