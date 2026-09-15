@@ -76,15 +76,16 @@ class Auth extends BaseController
         session()->regenerate(true);
 
         session()->set([
-            'isLoggedIn' => true,
-            'user_id'    => $user['id'],
-            'username'   => $user['username'],
-            'full_name'  => $user['full_name'],
-            'role'       => $user['role_name'],   // contoh: 'operator_sekolah'
-            'role_label' => $user['role_label'],  // contoh: 'Operator Sekolah'
-            'sekolah_id' => $user['sekolah_id'],  // null kalau bukan operator sekolah
-            'kampus_id'  => $user['kampus_id'],   // null kalau bukan operator kampus
-            'is_active'  => (bool) $user['is_active'],
+            'isLoggedIn'            => true,
+            'user_id'               => $user['id'],
+            'username'              => $user['username'],
+            'full_name'             => $user['full_name'],
+            'role'                  => $user['role_name'],   // contoh: 'operator_sekolah'
+            'role_label'            => $user['role_label'],  // contoh: 'Operator Sekolah'
+            'sekolah_id'            => $user['sekolah_id'],  // null kalau bukan operator sekolah
+            'kampus_id'             => $user['kampus_id'],   // null kalau bukan operator kampus
+            'is_active'             => (bool) $user['is_active'],
+            'must_change_password'  => (bool) $user['must_change_password'],
         ]);
 
         $this->userModel->update($user['id'], ['last_login_at' => date('Y-m-d H:i:s')]);
@@ -100,5 +101,58 @@ class Auth extends BaseController
         session()->destroy();
 
         return redirect()->to('/login')->with('success', 'Anda telah logout.');
+    }
+
+    /**
+     * Tampilkan form ganti password.
+     * Diakses baik karena dipaksa (must_change_password aktif) MAUPUN
+     * kalau user mau ganti password sendiri secara sukarela nanti.
+     */
+    public function changePassword()
+    {
+        return view('auth/change_password');
+    }
+
+    /**
+     * Proses submit form ganti password.
+     */
+    public function updatePassword()
+    {
+        $rules = [
+            'current_password'     => 'required',
+            'new_password'         => 'required|min_length[8]|differs[current_password]',
+            'new_password_confirm' => 'required|matches[new_password]',
+        ];
+
+        $messages = [
+            'new_password' => [
+                'differs' => 'Password baru tidak boleh sama dengan password lama.',
+            ],
+            'new_password_confirm' => [
+                'matches' => 'Konfirmasi password tidak cocok dengan password baru.',
+            ],
+        ];
+
+        if (! $this->validate($rules, $messages)) {
+            return redirect()->back()->with('errors', $this->validator->getErrors());
+        }
+
+        $userId  = session()->get('user_id');
+        $user    = $this->userModel->find($userId);
+
+        if (! $user || ! $this->userModel->verifyPassword($this->request->getPost('current_password'), $user['password_hash'])) {
+            return redirect()->back()->with('error', 'Password lama yang Anda masukkan salah.');
+        }
+
+        $newHash = password_hash($this->request->getPost('new_password'), PASSWORD_DEFAULT);
+
+        $this->userModel->update($userId, [
+            'password_hash'         => $newHash,
+            'must_change_password'  => 0,
+        ]);
+
+        session()->set('must_change_password', false);
+
+        return redirect()->to('/dashboard')->with('success', 'Password berhasil diganti.');
     }
 }
