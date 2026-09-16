@@ -1,0 +1,260 @@
+ERROR - 2026-09-16 02:06:45 --> Error connecting to the database: mysqli_sql_exception: No connection could be made because the target machine actively refused it in Z:\website\sindakv2\sourceCode\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 Z:\website\sindakv2\sourceCode\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', 'root', Object(SensitiveParameterValue), 'db-sindak', 3306, '', 0)
+#1 Z:\website\sindakv2\sourceCode\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 Z:\website\sindakv2\sourceCode\system\Session\Handlers\DatabaseHandler.php(99): CodeIgniter\Database\BaseConnection->initialize()
+#3 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->open('ci_sessions', 'sindak_v2_sessi...')
+#4 Z:\website\sindakv2\sourceCode\system\Session\Session.php(624): session_start()
+#5 Z:\website\sindakv2\sourceCode\system\Session\Session.php(119): CodeIgniter\Session\Session->startSession()
+#6 Z:\website\sindakv2\sourceCode\system\Config\Services.php(714): CodeIgniter\Session\Session->start()
+#7 Z:\website\sindakv2\sourceCode\system\Config\BaseService.php(325): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+#8 Z:\website\sindakv2\sourceCode\system\Config\BaseService.php(264): CodeIgniter\Config\BaseService::__callStatic('session', Array)
+#9 Z:\website\sindakv2\sourceCode\system\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', NULL)
+#10 Z:\website\sindakv2\sourceCode\system\Config\BaseService.php(334): CodeIgniter\Config\Services::session()
+#11 Z:\website\sindakv2\sourceCode\system\Config\BaseService.php(203): CodeIgniter\Config\BaseService::__callStatic('session', Array)
+#12 Z:\website\sindakv2\sourceCode\system\Common.php(1096): CodeIgniter\Config\BaseService::get('session')
+#13 Z:\website\sindakv2\sourceCode\system\Common.php(1069): service('session')
+#14 Z:\website\sindakv2\sourceCode\app\Filters\AuthFilter.php(21): session()
+#15 Z:\website\sindakv2\sourceCode\system\Filters\Filters.php(241): App\Filters\AuthFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), NULL)
+#16 Z:\website\sindakv2\sourceCode\system\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore(Array)
+#17 Z:\website\sindakv2\sourceCode\system\CodeIgniter.php(488): CodeIgniter\Filters\Filters->run('dashboard', 'before')
+#18 Z:\website\sindakv2\sourceCode\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#19 Z:\website\sindakv2\sourceCode\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#20 Z:\website\sindakv2\sourceCode\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#21 Z:\website\sindakv2\sourceCode\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#22 Z:\website\sindakv2\sourceCode\system\rewrite.php(44): require_once('Z:\\website\\sind...')
+#23 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: No connection could be made because the target machine actively refused it in Z:\website\sindakv2\sourceCode\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 Z:\website\sindakv2\sourceCode\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 Z:\website\sindakv2\sourceCode\system\Session\Handlers\DatabaseHandler.php(99): CodeIgniter\Database\BaseConnection->initialize()
+#2 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->open('ci_sessions', 'sindak_v2_sessi...')
+#3 Z:\website\sindakv2\sourceCode\system\Session\Session.php(624): session_start()
+#4 Z:\website\sindakv2\sourceCode\system\Session\Session.php(119): CodeIgniter\Session\Session->startSession()
+#5 Z:\website\sindakv2\sourceCode\system\Config\Services.php(714): CodeIgniter\Session\Session->start()
+#6 Z:\website\sindakv2\sourceCode\system\Config\BaseService.php(325): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+#7 Z:\website\sindakv2\sourceCode\system\Config\BaseService.php(264): CodeIgniter\Config\BaseService::__callStatic('session', Array)
+#8 Z:\website\sindakv2\sourceCode\system\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', NULL)
+#9 Z:\website\sindakv2\sourceCode\system\Config\BaseService.php(334): CodeIgniter\Config\Services::session()
+#10 Z:\website\sindakv2\sourceCode\system\Config\BaseService.php(203): CodeIgniter\Config\BaseService::__callStatic('session', Array)
+#11 Z:\website\sindakv2\sourceCode\system\Common.php(1096): CodeIgniter\Config\BaseService::get('session')
+#12 Z:\website\sindakv2\sourceCode\system\Common.php(1069): service('session')
+#13 Z:\website\sindakv2\sourceCode\app\Filters\AuthFilter.php(21): session()
+#14 Z:\website\sindakv2\sourceCode\system\Filters\Filters.php(241): App\Filters\AuthFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), NULL)
+#15 Z:\website\sindakv2\sourceCode\system\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore(Array)
+#16 Z:\website\sindakv2\sourceCode\system\CodeIgniter.php(488): CodeIgniter\Filters\Filters->run('dashboard', 'before')
+#17 Z:\website\sindakv2\sourceCode\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#18 Z:\website\sindakv2\sourceCode\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#19 Z:\website\sindakv2\sourceCode\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#20 Z:\website\sindakv2\sourceCode\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#21 Z:\website\sindakv2\sourceCode\system\rewrite.php(44): require_once('Z:\\website\\sind...')
+#22 {main}
+CRITICAL - 2026-09-16 02:06:45 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: No connection could be made because the target machine actively refused it
+[Method: GET, Route: dashboard]
+in SYSTEMPATH\Database\BaseConnection.php on line 606.
+ 1 SYSTEMPATH\Session\Handlers\DatabaseHandler.php(99): CodeIgniter\Database\BaseConnection->initialize()
+ 2 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->open('ci_sessions', 'sindak_v2_session')
+ 3 SYSTEMPATH\Session\Session.php(624): session_start()
+ 4 SYSTEMPATH\Session\Session.php(119): CodeIgniter\Session\Session->startSession()
+ 5 SYSTEMPATH\Config\Services.php(714): CodeIgniter\Session\Session->start()
+ 6 SYSTEMPATH\Config\BaseService.php(325): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+ 7 SYSTEMPATH\Config\BaseService.php(264): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+ 8 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+ 9 SYSTEMPATH\Config\BaseService.php(334): CodeIgniter\Config\Services::session()
+10 SYSTEMPATH\Config\BaseService.php(203): CodeIgniter\Config\BaseService::__callStatic('session', [])
+11 SYSTEMPATH\Common.php(1096): CodeIgniter\Config\BaseService::get('session')
+12 SYSTEMPATH\Common.php(1069): service('session')
+13 APPPATH\Filters\AuthFilter.php(21): session()
+14 SYSTEMPATH\Filters\Filters.php(241): App\Filters\AuthFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+15 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+16 SYSTEMPATH\CodeIgniter.php(488): CodeIgniter\Filters\Filters->run('dashboard', 'before')
+17 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+18 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+19 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+20 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+21 SYSTEMPATH\rewrite.php(44): require_once('Z:\\website\\sindakv2\\sourceCode\\public\\index.php')
+CRITICAL - 2026-09-16 02:06:57 --> ErrorException: Undefined property: Config\Security::$cookieName
+[Method: GET, Route: login]
+in SYSTEMPATH\Security\Security.php on line 199.
+ 1 SYSTEMPATH\Security\Security.php(199): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: Config\\Security::$cookieName', 'Z:\\website\\sindakv2\\sourceCode\\system\\Security\\Security.php', 199)
+ 2 SYSTEMPATH\Config\Services.php(657): CodeIgniter\Security\Security->__construct(Object(Config\Security))
+ 3 SYSTEMPATH\Config\BaseService.php(325): CodeIgniter\Config\Services::security(Object(Config\Security), false)
+ 4 SYSTEMPATH\Config\BaseService.php(264): CodeIgniter\Config\BaseService::__callStatic('security', [...])
+ 5 SYSTEMPATH\Config\Services.php(652): CodeIgniter\Config\BaseService::getSharedInstance('security', null)
+ 6 SYSTEMPATH\Config\BaseService.php(334): CodeIgniter\Config\Services::security()
+ 7 SYSTEMPATH\Config\BaseService.php(203): CodeIgniter\Config\BaseService::__callStatic('security', [])
+ 8 SYSTEMPATH\Common.php(1096): CodeIgniter\Config\BaseService::get('security')
+ 9 SYSTEMPATH\Common.php(278): service('security')
+10 SYSTEMPATH\Common.php(314): csrf_token()
+11 APPPATH\Views\auth\login.php(28): csrf_field()
+12 SYSTEMPATH\View\View.php(240): include('Z:\\website\\sindakv2\\sourceCode\\app\\Views\\auth\\login.php')
+13 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+14 SYSTEMPATH\Common.php(1268): CodeIgniter\View\View->render('auth/login', [], true)
+15 APPPATH\Controllers\Auth.php(29): view('auth/login')
+16 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Auth->index()
+17 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+18 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+19 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+20 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+21 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+22 SYSTEMPATH\rewrite.php(44): require_once('Z:\\website\\sindakv2\\sourceCode\\public\\index.php')
+CRITICAL - 2026-09-16 02:07:05 --> ErrorException: Undefined property: Config\Security::$cookieName
+[Method: GET, Route: /]
+in SYSTEMPATH\Security\Security.php on line 199.
+ 1 SYSTEMPATH\Security\Security.php(199): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: Config\\Security::$cookieName', 'Z:\\website\\sindakv2\\sourceCode\\system\\Security\\Security.php', 199)
+ 2 SYSTEMPATH\Config\Services.php(657): CodeIgniter\Security\Security->__construct(Object(Config\Security))
+ 3 SYSTEMPATH\Config\BaseService.php(325): CodeIgniter\Config\Services::security(Object(Config\Security), false)
+ 4 SYSTEMPATH\Config\BaseService.php(264): CodeIgniter\Config\BaseService::__callStatic('security', [...])
+ 5 SYSTEMPATH\Config\Services.php(652): CodeIgniter\Config\BaseService::getSharedInstance('security', null)
+ 6 SYSTEMPATH\Config\BaseService.php(334): CodeIgniter\Config\Services::security()
+ 7 SYSTEMPATH\Config\BaseService.php(203): CodeIgniter\Config\BaseService::__callStatic('security', [])
+ 8 SYSTEMPATH\Common.php(1096): CodeIgniter\Config\BaseService::get('security')
+ 9 SYSTEMPATH\Common.php(278): service('security')
+10 SYSTEMPATH\Common.php(314): csrf_token()
+11 APPPATH\Views\auth\login.php(28): csrf_field()
+12 SYSTEMPATH\View\View.php(240): include('Z:\\website\\sindakv2\\sourceCode\\app\\Views\\auth\\login.php')
+13 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+14 SYSTEMPATH\Common.php(1268): CodeIgniter\View\View->render('auth/login', [], true)
+15 APPPATH\Controllers\Auth.php(29): view('auth/login')
+16 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Auth->index()
+17 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+18 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+19 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+20 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+21 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+22 SYSTEMPATH\rewrite.php(44): require_once('Z:\\website\\sindakv2\\sourceCode\\public\\index.php')
+CRITICAL - 2026-09-16 02:07:13 --> ErrorException: Undefined property: Config\Security::$cookieName
+[Method: GET, Route: /]
+in SYSTEMPATH\Security\Security.php on line 199.
+ 1 SYSTEMPATH\Security\Security.php(199): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: Config\\Security::$cookieName', 'Z:\\website\\sindakv2\\sourceCode\\system\\Security\\Security.php', 199)
+ 2 SYSTEMPATH\Config\Services.php(657): CodeIgniter\Security\Security->__construct(Object(Config\Security))
+ 3 SYSTEMPATH\Config\BaseService.php(325): CodeIgniter\Config\Services::security(Object(Config\Security), false)
+ 4 SYSTEMPATH\Config\BaseService.php(264): CodeIgniter\Config\BaseService::__callStatic('security', [...])
+ 5 SYSTEMPATH\Config\Services.php(652): CodeIgniter\Config\BaseService::getSharedInstance('security', null)
+ 6 SYSTEMPATH\Config\BaseService.php(334): CodeIgniter\Config\Services::security()
+ 7 SYSTEMPATH\Config\BaseService.php(203): CodeIgniter\Config\BaseService::__callStatic('security', [])
+ 8 SYSTEMPATH\Common.php(1096): CodeIgniter\Config\BaseService::get('security')
+ 9 SYSTEMPATH\Common.php(278): service('security')
+10 SYSTEMPATH\Common.php(314): csrf_token()
+11 APPPATH\Views\auth\login.php(28): csrf_field()
+12 SYSTEMPATH\View\View.php(240): include('Z:\\website\\sindakv2\\sourceCode\\app\\Views\\auth\\login.php')
+13 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+14 SYSTEMPATH\Common.php(1268): CodeIgniter\View\View->render('auth/login', [], true)
+15 APPPATH\Controllers\Auth.php(29): view('auth/login')
+16 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Auth->index()
+17 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+18 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+19 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+20 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+21 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+22 SYSTEMPATH\rewrite.php(44): require_once('Z:\\website\\sindakv2\\sourceCode\\public\\index.php')
+CRITICAL - 2026-09-16 02:09:04 --> ErrorException: Undefined property: Config\Security::$cookieName
+[Method: GET, Route: /]
+in SYSTEMPATH\Security\Security.php on line 199.
+ 1 SYSTEMPATH\Security\Security.php(199): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: Config\\Security::$cookieName', 'Z:\\website\\sindakv2\\sourceCode\\system\\Security\\Security.php', 199)
+ 2 SYSTEMPATH\Config\Services.php(657): CodeIgniter\Security\Security->__construct(Object(Config\Security))
+ 3 SYSTEMPATH\Config\BaseService.php(325): CodeIgniter\Config\Services::security(Object(Config\Security), false)
+ 4 SYSTEMPATH\Config\BaseService.php(264): CodeIgniter\Config\BaseService::__callStatic('security', [...])
+ 5 SYSTEMPATH\Config\Services.php(652): CodeIgniter\Config\BaseService::getSharedInstance('security', null)
+ 6 SYSTEMPATH\Config\BaseService.php(334): CodeIgniter\Config\Services::security()
+ 7 SYSTEMPATH\Config\BaseService.php(203): CodeIgniter\Config\BaseService::__callStatic('security', [])
+ 8 SYSTEMPATH\Common.php(1096): CodeIgniter\Config\BaseService::get('security')
+ 9 SYSTEMPATH\Common.php(278): service('security')
+10 SYSTEMPATH\Common.php(314): csrf_token()
+11 APPPATH\Views\auth\login.php(28): csrf_field()
+12 SYSTEMPATH\View\View.php(240): include('Z:\\website\\sindakv2\\sourceCode\\app\\Views\\auth\\login.php')
+13 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+14 SYSTEMPATH\Common.php(1268): CodeIgniter\View\View->render('auth/login', [], true)
+15 APPPATH\Controllers\Auth.php(29): view('auth/login')
+16 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Auth->index()
+17 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+18 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+19 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+20 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+21 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+22 SYSTEMPATH\rewrite.php(44): require_once('Z:\\website\\sindakv2\\sourceCode\\public\\index.php')
+DEBUG - 2026-09-16 02:10:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+CRITICAL - 2026-09-16 02:10:41 --> ErrorException: Undefined property: Config\Security::$cookieName
+[Method: GET, Route: /]
+in SYSTEMPATH\Security\Security.php on line 199.
+ 1 SYSTEMPATH\Security\Security.php(199): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: Config\\Security::$cookieName', 'Z:\\website\\sindakv2\\sourceCode\\system\\Security\\Security.php', 199)
+ 2 SYSTEMPATH\Config\Services.php(657): CodeIgniter\Security\Security->__construct(Object(Config\Security))
+ 3 SYSTEMPATH\Config\BaseService.php(325): CodeIgniter\Config\Services::security(Object(Config\Security), false)
+ 4 SYSTEMPATH\Config\BaseService.php(264): CodeIgniter\Config\BaseService::__callStatic('security', [...])
+ 5 SYSTEMPATH\Config\Services.php(652): CodeIgniter\Config\BaseService::getSharedInstance('security', null)
+ 6 SYSTEMPATH\Config\BaseService.php(334): CodeIgniter\Config\Services::security()
+ 7 SYSTEMPATH\Config\BaseService.php(203): CodeIgniter\Config\BaseService::__callStatic('security', [])
+ 8 SYSTEMPATH\Common.php(1096): CodeIgniter\Config\BaseService::get('security')
+ 9 SYSTEMPATH\Common.php(278): service('security')
+10 SYSTEMPATH\Common.php(314): csrf_token()
+11 APPPATH\Views\auth\login.php(28): csrf_field()
+12 SYSTEMPATH\View\View.php(240): include('Z:\\website\\sindakv2\\sourceCode\\app\\Views\\auth\\login.php')
+13 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+14 SYSTEMPATH\Common.php(1268): CodeIgniter\View\View->render('auth/login', [], true)
+15 APPPATH\Controllers\Auth.php(29): view('auth/login')
+16 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Auth->index()
+17 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+18 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+19 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+20 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+21 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+22 SYSTEMPATH\rewrite.php(44): require_once('Z:\\website\\sindakv2\\sourceCode\\public\\index.php')
+DEBUG - 2026-09-16 02:12:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:23:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:23:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:23:19 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:26:50 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:26:50 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:26:50 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:26:58 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:26:58 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:26:58 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:27:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:27:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:27:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:27:09 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:27:09 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:27:09 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:27:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:27:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:27:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:27:40 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:27:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:28:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:28:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:28:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:30:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:30:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:30:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:36:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:36:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:37:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:37:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:37:20 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:37:20 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:38:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:38:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:38:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:38:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:40:20 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:40:20 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:40:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:42:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:42:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:45:27 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:45:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 02:45:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 03:05:24 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 03:05:34 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 03:05:34 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 03:06:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 03:06:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 03:07:09 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 03:07:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 03:07:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 04:46:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 04:58:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 05:00:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2026-09-16 05:00:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.

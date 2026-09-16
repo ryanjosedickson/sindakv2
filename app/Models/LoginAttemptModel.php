@@ -22,7 +22,7 @@ class LoginAttemptModel extends Model
     private const MAX_ATTEMPTS = 5;
 
     /** Jendela waktu (menit) untuk menghitung percobaan gagal. */
-    private const WINDOW_MINUTES = 15;
+    private const WINDOW_MINUTES = 5;
 
     public function record(string $username, string $ipAddress, bool $isSuccess): void
     {

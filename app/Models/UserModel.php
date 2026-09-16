@@ -16,6 +16,7 @@ class UserModel extends Model
         'username',
         'email',
         'password_hash',
+        'must_change_password',
         'full_name',
         'role_id',
         'sekolah_id',

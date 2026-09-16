@@ -14,6 +14,16 @@ class Security extends BaseConfig
     public string $csrfProtection = 'session';
 
     /**
+     * Properti wajib bawaan CI4 — WAJIB tetap dideklarasikan meskipun
+     * nilainya default, karena Security.php (library inti) mengaksesnya
+     * langsung tanpa pengecekan isset(). Kalau dihilangkan, akan error
+     * "Undefined property" fatal saat aplikasi jalan.
+     */
+    public string $tokenName = 'csrf_token_name';
+    public string $headerName = 'X-CSRF-TOKEN';
+    public string $cookieName = 'csrf_cookie_name';
+
+    /**
      * true = tambahkan random mask ke token (mitigasi BREACH/compression
      * side-channel attack). Tidak ada downside signifikan untuk diaktifkan.
      */
