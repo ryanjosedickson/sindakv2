@@ -26,18 +26,25 @@ $routes->post('change-password', 'Auth::updatePassword', ['filter' => 'auth']);
 $routes->get('dashboard', 'Beranda::index', ['filter' => ['auth', 'forcepwd']]);
 
 // ============================================
-// CONTOH route khusus Super Admin & Operator Pusat saja
-// (dipakai nanti pas bikin modul Kepegawaian/Urusan Agama di Tier 1)
+// Route Super Admin & Operator Pusat
 // ============================================
 $routes->group('admin', ['filter' => ['auth', 'forcepwd', 'role:super_admin,operator_pusat']], static function ($routes) {
-    // isi nanti pas Tier 1
-    // Nanti diisi route modul Kepegawaian, Sinode, Yayasan, dst.
-    // Contoh: $routes->get('pegawai-pusat', 'Pegpusat::index');
+    // ============================================
+    // MODUL PEGAWAI
+    // ============================================
+    $routes->get('pegawai', 'Pegawai::index');
+    $routes->get('pegawai/tambah', 'Pegawai::create');
+    $routes->post('pegawai/tambah', 'Pegawai::store');
+    $routes->get('pegawai/(:num)/edit', 'Pegawai::edit/$1');
+    $routes->post('pegawai/(:num)/edit', 'Pegawai::update/$1');
+    $routes->post('pegawai/(:num)/hapus', 'Pegawai::delete/$1');
 });
+
 
 // ============================================
 // CONTOH route khusus Operator Sekolah
 // (dipakai nanti pas bikin modul Guru/Siswa/SPKK di Tier 2)
 // ============================================
-$routes->group('sekolah', ['filter' => ['auth', 'forcepwd', 'role:super_admin,operator_sekolah']], static function ($routes) {    // Contoh: $routes->get('siswa', 'Siswasdtk::index');
+$routes->group('sekolah', ['filter' => ['auth', 'forcepwd', 'role:super_admin,operator_sekolah']], static function ($routes) {    
+    // Contoh: $routes->get('siswa', 'Siswasdtk::index');
 });
