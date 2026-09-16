@@ -75,6 +75,13 @@ class Auth extends BaseController
         // Parameter true = hapus data session lama sepenuhnya.
         session()->regenerate(true);
 
+        // Regenerasi CSRF token secara eksplisit tepat setelah login.
+        // Ini salah satu mitigasi resmi dari CodeIgniter untuk celah
+        // CSRF-bypass-via-subdomain (GHSA-5hm8-vh6r-2cjq) — dilakukan
+        // manual di sini karena $regenerate di Security.php sengaja
+        // di-set false (Opsi B, demi kompatibilitas AJAX berurutan).
+        \Config\Services::security()->generateHash();
+
         session()->set([
             'isLoggedIn'            => true,
             'user_id'               => $user['id'],
