@@ -90,9 +90,13 @@ class Pegawai extends BaseController
 
         $data = $this->extractPegawaiInput();
 
-        // Passing $id ke update() supaya placeholder {id} di rule
-        // is_unique[pegawai.nip,id,{id}] otomatis terisi benar —
-        // mengecualikan baris pegawai ini sendiri dari cek keunikan NIP.
+        // Sertakan 'id' eksplisit di $data — CI4 (sejak 4.3.5) TIDAK lagi
+        // otomatis mengisi placeholder {id} di validationRules hanya dari
+        // parameter $id di update(). Field 'id' harus benar-benar ada di
+        // array $data, dan rule untuk 'id' harus didaftarkan juga di
+        // PegawaiModel::$validationRules (sudah ditambahkan di sana).
+        $data['id'] = $id;
+
         if (! $this->pegawaiModel->update($id, $data)) {
             return redirect()->back()->withInput()->with('errors', $this->pegawaiModel->errors());
         }

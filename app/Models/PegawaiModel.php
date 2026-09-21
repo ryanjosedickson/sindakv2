@@ -42,6 +42,12 @@ class PegawaiModel extends Model
     // Validasi dasar di level model — lapisan pertahanan kedua selain
     // validasi di controller (defense in depth).
     protected $validationRules = [
+        // Rule untuk field 'id' WAJIB didaftarkan (sejak CI4 4.3.5) supaya
+        // placeholder {id} di rule 'nip' di bawah bisa tergantikan dengan
+        // benar saat update — kalau tidak, is_unique akan selalu anggap
+        // tidak ada pengecualian, sehingga data yang di-edit dianggap
+        // "duplikat" terhadap dirinya sendiri.
+        'id'           => 'permit_empty|is_natural_no_zero',
         'nip'          => 'required|exact_length[18]|numeric|is_unique[pegawai.nip,id,{id}]',
         'nama_lengkap' => 'required|max_length[150]',
         'kategori'     => 'required|in_list[pusat,daerah]',
