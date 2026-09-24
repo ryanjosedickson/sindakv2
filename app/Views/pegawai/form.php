@@ -88,8 +88,15 @@
         <label for="jenjang_pendidikan">Jenjang Pendidikan</label><br>
         <select id="jenjang_pendidikan" name="jenjang_pendidikan">
             <option value="">-- Pilih --</option>
-            <?php foreach (['SD', 'SMP', 'SMA', 'D3', 'S1', 'S2', 'S3'] as $val): ?>
-                <option value="<?= $val ?>" <?= fieldValue('jenjang_pendidikan', $pegawai) === $val ? 'selected' : '' ?>><?= $val ?></option>
+            <?php
+                $jenjangPendidikanList = [
+                    'SD', 'SLTP/SMP Sederajat', 'SLTA/SMA Sederajat',
+                    'D-II', 'D-III', 'D-IV',
+                    'S-1/Sarjana', 'S-2/Magister', 'S-3/Doktor',
+                ];
+            ?>
+            <?php foreach ($jenjangPendidikanList as $val): ?>
+                <option value="<?= esc($val) ?>" <?= fieldValue('jenjang_pendidikan', $pegawai) === $val ? 'selected' : '' ?>><?= esc($val) ?></option>
             <?php endforeach; ?>
         </select><br><br>
 
@@ -115,7 +122,7 @@
             <select id="<?= $fieldName ?>" name="<?= $fieldName ?>">
                 <option value="">-- Pilih --</option>
                 <?php if (empty($info['list'])): ?>
-                    <option value="" disabled>(Data belum tersedia — menunggu referensi)</option>
+                    <option value="" disabled>(Data belum tersedia)</option>
                 <?php else: ?>
                     <?php foreach ($info['list'] as $item): ?>
                         <option value="<?= $item['id'] ?>"

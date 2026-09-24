@@ -133,7 +133,11 @@ class Pegawai extends BaseController
     private function extractPegawaiInput(): array
     {
         return [
-            'nip'                => $this->request->getPost('nip'),
+            // ?: null penting — kalau NIP dikosongkan di form, harus benar-benar
+            // tersimpan sebagai NULL (bukan string kosong ''), supaya tidak
+            // bentrok dengan unique constraint saat ada banyak pegawai yang
+            // sama-sama belum diisi NIP-nya (data hasil bulk import).
+            'nip'                => $this->request->getPost('nip') ?: null,
             'nama_lengkap'       => $this->request->getPost('nama_lengkap'),
             'kategori'           => $this->request->getPost('kategori'),
             'agama'              => $this->request->getPost('agama') ?: null,
