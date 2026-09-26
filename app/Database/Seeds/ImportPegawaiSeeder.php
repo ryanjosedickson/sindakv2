@@ -75,6 +75,24 @@ class ImportPegawaiSeeder extends Seeder
         'MIMIKA BARU'               => 'MIMIKA', // nama kecamatan, bukan kabupaten
         'JAYAPURA KOTA'             => 'KOTA JAYAPURA', // urutan kata terbalik
         'DELIYAI'                   => 'DEIYAI', // typo/ejaan alternatif
+        'MAMUJU UTARA'              => 'PASANGKAYU', // ganti nama resmi 2018
+        'YAPEN-SERUI'               => 'KEPULAUAN YAPEN', // nama kabupaten + ibukota digabung tanda hubung
+        'KEPL. SITARO'              => 'KEPULAUAN SIAU TAGULANDANG BIARO',
+    ];
+
+    /** Provinsi yang pernah mengalami pemekaran, dikelompokkan per "keluarga".
+     *  Kalau kab/kota tidak ketemu di provinsi asal data sumber, pencarian
+     *  diperluas ke semua provinsi dalam keluarga yang sama — karena data
+     *  sumber sering masih pakai batas provinsi SEBELUM pemekaran. */
+    private const PROVINSI_FAMILIES = [
+        'papua'             => ['Papua', 'Papua Barat', 'Papua Tengah', 'Papua Pegunungan', 'Papua Selatan', 'Papua Barat Daya'],
+        'papua barat'       => ['Papua', 'Papua Barat', 'Papua Tengah', 'Papua Pegunungan', 'Papua Selatan', 'Papua Barat Daya'],
+        'papua tengah'      => ['Papua', 'Papua Barat', 'Papua Tengah', 'Papua Pegunungan', 'Papua Selatan', 'Papua Barat Daya'],
+        'papua pegunungan'  => ['Papua', 'Papua Barat', 'Papua Tengah', 'Papua Pegunungan', 'Papua Selatan', 'Papua Barat Daya'],
+        'papua selatan'     => ['Papua', 'Papua Barat', 'Papua Tengah', 'Papua Pegunungan', 'Papua Selatan', 'Papua Barat Daya'],
+        'papua barat daya'  => ['Papua', 'Papua Barat', 'Papua Tengah', 'Papua Pegunungan', 'Papua Selatan', 'Papua Barat Daya'],
+        'kalimantan timur'  => ['Kalimantan Timur', 'Kalimantan Utara'], // pemekaran 2012
+        'kalimantan utara'  => ['Kalimantan Timur', 'Kalimantan Utara'],
     ];
 
     /** Cache lookup supaya tidak query berulang-ulang untuk nilai yang sama. */
@@ -291,7 +309,7 @@ class ImportPegawaiSeeder extends Seeder
 
         // Strip prefix "Kabupaten"/"Kab."/"Kota Administrasi"/"Kota" dengan
         // nol-atau-lebih spasi sesudahnya (menangani "Kab.Sorong" tanpa spasi)
-        $t = preg_replace('/^(KABUPATEN|KAB\.?|KOTA\s*(ADMINISTRASI|ADM\.?)?)\s*/', '', $t);
+        $t = preg_replace('/^(KABUPATEN|KABUIPATEN|KABUAPTEN|KAB\.?|KOTA\s*(ADMINISTRASI|ADM\.?)?)\s*/', '', $t);
         $t = trim(preg_replace('/\s+/', ' ', $t));
 
         // Cek alias LAGI setelah strip prefix (untuk alias yang aslinya
@@ -302,10 +320,10 @@ class ImportPegawaiSeeder extends Seeder
     /**
      * Resolve Kabupaten/Kota. Strategi berlapis:
      * 1. Exact/fuzzy match dalam SCOPE provinsi yang sudah resolve
-     * 2. Kalau gagal & provinsi termasuk "keluarga Papua" (yang kena
-     *    pemekaran 2022), perluas pencarian ke SEMUA provinsi yang
-     *    namanya mengandung "Papua" — karena data sumber sering masih
-     *    pakai batas provinsi lama sebelum pemekaran
+     * 2. Kalau gagal & provinsi termasuk salah satu PROVINSI_FAMILIES
+     *    (pernah kena pemekaran), perluas pencarian ke semua provinsi
+     *    dalam keluarga yang sama — karena data sumber sering masih
+     *    pakai batas provinsi SEBELUM pemekaran
      * 3. Kalau provinsi tidak diketahui (kosong di data sumber), coba
      *    cari ke SELURUH kabupaten/kota secara nasional (tanpa scope)
      */
@@ -326,13 +344,16 @@ class ImportPegawaiSeeder extends Seeder
                 $provinsiNama = $this->db->table('provinsi')->select('nama')
                     ->where('id', $provinsiId)->get()->getRowArray()['nama'] ?? '';
 
-                if (stripos($provinsiNama, 'Papua') !== false) {
-                    $papuaProvinceIds = array_column(
+                $familyKey = strtolower(trim($provinsiNama));
+                $familyNames = self::PROVINSI_FAMILIES[$familyKey] ?? null;
+
+                if ($familyNames !== null) {
+                    $familyIds = array_column(
                         $this->db->table('provinsi')->select('id')
-                            ->like('nama', 'Papua')->get()->getResultArray(),
+                            ->whereIn('nama', $familyNames)->get()->getResultArray(),
                         'id'
                     );
-                    $result = $this->searchKabKotaInProvinces($cleaned, $papuaProvinceIds);
+                    $result = $this->searchKabKotaInProvinces($cleaned, $familyIds);
                 }
             }
         } else {
