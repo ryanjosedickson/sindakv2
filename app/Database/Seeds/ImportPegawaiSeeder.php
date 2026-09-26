@@ -61,6 +61,22 @@ class ImportPegawaiSeeder extends Seeder
         'SIAK'                       => 'Riau', // keputusan: Siak (nama Kabupaten) -> Provinsi Riau
     ];
 
+    /** Alias untuk nama Kabupaten/Kota yang berubah resmi, pakai nama ibukota,
+     *  atau singkatan — ditemukan dari analisis laporan unresolved. */
+    private const KABKOTA_ALIASES = [
+        'TOBA SAMOSIR'              => 'TOBA', // ganti nama resmi 2020
+        'MALUKU TENGGARA BARAT'     => 'KEPULAUAN TANIMBAR', // ganti nama resmi 2008
+        'TTS'                       => 'TIMOR TENGAH SELATAN',
+        'MINSEL'                    => 'MINAHASA SELATAN',
+        'KUALA KAPUAS'              => 'KAPUAS', // nama ibukota, bukan nama kabupaten
+        'TANJUNG SELOR'             => 'BULUNGAN', // nama ibukota
+        'AMURANG'                   => 'MINAHASA SELATAN', // nama ibukota
+        'TIMIKA'                    => 'MIMIKA', // nama ibukota
+        'MIMIKA BARU'               => 'MIMIKA', // nama kecamatan, bukan kabupaten
+        'JAYAPURA KOTA'             => 'KOTA JAYAPURA', // urutan kata terbalik
+        'DELIYAI'                   => 'DEIYAI', // typo/ejaan alternatif
+    ];
+
     /** Cache lookup supaya tidak query berulang-ulang untuk nilai yang sama. */
     private array $cache = [];
 
@@ -130,7 +146,7 @@ class ImportPegawaiSeeder extends Seeder
             $provinsiId = $provinsiNama ? $this->findIdByName('provinsi', $provinsiNama) : null;
 
             $kabKotaRaw = $get('Kab Kota');
-            $kabupatenKotaId = ($kabKotaRaw !== '' && $provinsiId)
+            $kabupatenKotaId = ($kabKotaRaw !== '')
                 ? $this->resolveKabupatenKota($kabKotaRaw, $provinsiId)
                 : null;
 
@@ -252,53 +268,125 @@ class ImportPegawaiSeeder extends Seeder
     }
 
     /**
-     * Resolve Kabupaten/Kota: exact match dulu (case-insensitive, dengan/
-     * tanpa prefix "Kabupaten"/"Kota"), lalu fallback partial match, dalam
-     * SCOPE provinsi yang sudah resolve duluan (jauh lebih presisi &
-     * cepat daripada cari di semua 514 kab/kota nasional).
+     * Normalisasi teks Kab/Kota mentah: buang bagian "/Ibukota", buang isi
+     * dalam kurung, cek alias, lalu strip prefix Kabupaten/Kota (termasuk
+     * "Kota Administrasi" untuk kasus DKI Jakarta).
      */
-    private function resolveKabupatenKota(string $raw, int $provinsiId): ?int
+    private function cleanKabKotaText(string $raw): string
     {
-        $cacheKey = "kabkota_{$provinsiId}_" . strtoupper($raw);
+        $t = strtoupper(trim($raw));
+
+        // "Rote Ndao / Ba'a" -> "ROTE NDAO" (ambil bagian sebelum slash)
+        if (strpos($t, '/') !== false) {
+            $t = trim(explode('/', $t)[0]);
+        }
+
+        // "Kab. Deiyai (Deliyai)" -> "KAB. DEIYAI" ; "KEDIRI (KAB)" -> "KEDIRI"
+        $t = trim(preg_replace('/\(.*?\)/', '', $t));
+
+        // Cek alias SEBELUM strip prefix (beberapa alias sudah tanpa prefix)
+        if (isset(self::KABKOTA_ALIASES[$t])) {
+            $t = self::KABKOTA_ALIASES[$t];
+        }
+
+        // Strip prefix "Kabupaten"/"Kab."/"Kota Administrasi"/"Kota" dengan
+        // nol-atau-lebih spasi sesudahnya (menangani "Kab.Sorong" tanpa spasi)
+        $t = preg_replace('/^(KABUPATEN|KAB\.?|KOTA\s*(ADMINISTRASI|ADM\.?)?)\s*/', '', $t);
+        $t = trim(preg_replace('/\s+/', ' ', $t));
+
+        // Cek alias LAGI setelah strip prefix (untuk alias yang aslinya
+        // sudah tanpa prefix, misal "TOBA SAMOSIR" -> "TOBA")
+        return self::KABKOTA_ALIASES[$t] ?? $t;
+    }
+
+    /**
+     * Resolve Kabupaten/Kota. Strategi berlapis:
+     * 1. Exact/fuzzy match dalam SCOPE provinsi yang sudah resolve
+     * 2. Kalau gagal & provinsi termasuk "keluarga Papua" (yang kena
+     *    pemekaran 2022), perluas pencarian ke SEMUA provinsi yang
+     *    namanya mengandung "Papua" — karena data sumber sering masih
+     *    pakai batas provinsi lama sebelum pemekaran
+     * 3. Kalau provinsi tidak diketahui (kosong di data sumber), coba
+     *    cari ke SELURUH kabupaten/kota secara nasional (tanpa scope)
+     */
+    private function resolveKabupatenKota(string $raw, ?int $provinsiId): ?int
+    {
+        $cleaned = $this->cleanKabKotaText($raw);
+        $cacheKey = 'kabkota_' . ($provinsiId ?? 'null') . '_' . $cleaned;
         if (array_key_exists($cacheKey, $this->cache)) {
             return $this->cache[$cacheKey];
         }
 
-        $t = strtoupper(trim($raw));
-        $tStripped = preg_replace('/^(KABUPATEN|KAB\.?|KOTA)\s+/', '', $t);
+        $result = null;
+
+        if ($provinsiId !== null) {
+            $result = $this->searchKabKotaInProvinces($cleaned, [$provinsiId]);
+
+            if ($result === null) {
+                $provinsiNama = $this->db->table('provinsi')->select('nama')
+                    ->where('id', $provinsiId)->get()->getRowArray()['nama'] ?? '';
+
+                if (stripos($provinsiNama, 'Papua') !== false) {
+                    $papuaProvinceIds = array_column(
+                        $this->db->table('provinsi')->select('id')
+                            ->like('nama', 'Papua')->get()->getResultArray(),
+                        'id'
+                    );
+                    $result = $this->searchKabKotaInProvinces($cleaned, $papuaProvinceIds);
+                }
+            }
+        } else {
+            // Provinsi tidak diketahui dari data sumber — cari nasional
+            $allProvinceIds = array_column(
+                $this->db->table('provinsi')->select('id')->get()->getResultArray(),
+                'id'
+            );
+            $result = $this->searchKabKotaInProvinces($cleaned, $allProvinceIds, exactOnly: true);
+        }
+
+        return $this->cache[$cacheKey] = $result;
+    }
+
+    /**
+     * Cari nama yang sudah dibersihkan di antara kabupaten/kota milik
+     * daftar provinsi tertentu. exactOnly=true dipakai untuk pencarian
+     * nasional tanpa scope provinsi — di situ fuzzy match terlalu
+     * berisiko salah tempel (candidate pool terlalu besar & beragam).
+     */
+    private function searchKabKotaInProvinces(string $cleaned, array $provinsiIds, bool $exactOnly = false): ?int
+    {
+        if (empty($provinsiIds)) {
+            return null;
+        }
 
         $candidates = $this->db->table('kabupaten_kota')
             ->select('id, nama')
-            ->where('parent_id', $provinsiId)
+            ->whereIn('parent_id', $provinsiIds)
             ->get()->getResultArray();
 
         $bestId = null;
         $bestScore = PHP_INT_MAX;
 
         foreach ($candidates as $c) {
-            $candidateNama = strtoupper($c['nama']);
-            $candidateStripped = preg_replace('/^(KABUPATEN|KOTA)\s+/', '', $candidateNama);
+            $candidateClean = $this->cleanKabKotaText($c['nama']);
 
-            if ($candidateNama === $t || $candidateStripped === $tStripped) {
-                $this->cache[$cacheKey] = (int) $c['id'];
-                return (int) $c['id'];
+            if ($candidateClean === $cleaned) {
+                return (int) $c['id']; // exact match, langsung return
             }
 
-            // Fallback jarak Levenshtein pada versi yang sudah di-strip prefix
-            $distance = levenshtein($tStripped, $candidateStripped);
-            if ($distance < $bestScore) {
-                $bestScore = $distance;
-                $bestId = (int) $c['id'];
+            if (! $exactOnly) {
+                $distance = levenshtein($cleaned, $candidateClean);
+                if ($distance < $bestScore) {
+                    $bestScore = $distance;
+                    $bestId = (int) $c['id'];
+                }
             }
         }
 
-        // Ambang toleransi typo kecil saja (maks 3 karakter beda) —
-        // kalau lebih dari itu, lebih aman dianggap tidak ketemu dan
-        // masuk laporan review manual, daripada salah tempel.
-        $result = ($bestScore <= 3) ? $bestId : null;
-        $this->cache[$cacheKey] = $result;
-
-        return $result;
+        // Ambang toleransi typo — dinaikkan sedikit dari versi awal (3 -> 4)
+        // karena pool kandidat sudah dipersempit per-provinsi, jadi risiko
+        // salah tempel akibat threshold lebih longgar tetap kecil.
+        return (! $exactOnly && $bestScore <= 4) ? $bestId : null;
     }
 
     private function findIdByName(string $table, string $nama): ?int

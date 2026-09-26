@@ -1,0 +1,82 @@
+ERROR - 2026-09-26 04:09:19 --> Error connecting to the database: mysqli_sql_exception: No connection could be made because the target machine actively refused it in Z:\website\sindakv2\sourceCode\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 Z:\website\sindakv2\sourceCode\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', 'root', Object(SensitiveParameterValue), 'db-sindak', 3306, '', 0)
+#1 Z:\website\sindakv2\sourceCode\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 Z:\website\sindakv2\sourceCode\system\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+#3 Z:\website\sindakv2\sourceCode\system\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+#4 Z:\website\sindakv2\sourceCode\system\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+#5 Z:\website\sindakv2\sourceCode\system\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+#6 Z:\website\sindakv2\sourceCode\system\CLI\Commands.php(72): CodeIgniter\Commands\Database\Seed->run(Array)
+#7 Z:\website\sindakv2\sourceCode\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', Array)
+#8 Z:\website\sindakv2\sourceCode\system\Boot.php(444): CodeIgniter\CLI\Console->run()
+#9 Z:\website\sindakv2\sourceCode\system\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#10 Z:\website\sindakv2\sourceCode\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#11 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: No connection could be made because the target machine actively refused it in Z:\website\sindakv2\sourceCode\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 Z:\website\sindakv2\sourceCode\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 Z:\website\sindakv2\sourceCode\system\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+#2 Z:\website\sindakv2\sourceCode\system\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+#3 Z:\website\sindakv2\sourceCode\system\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+#4 Z:\website\sindakv2\sourceCode\system\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+#5 Z:\website\sindakv2\sourceCode\system\CLI\Commands.php(72): CodeIgniter\Commands\Database\Seed->run(Array)
+#6 Z:\website\sindakv2\sourceCode\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', Array)
+#7 Z:\website\sindakv2\sourceCode\system\Boot.php(444): CodeIgniter\CLI\Console->run()
+#8 Z:\website\sindakv2\sourceCode\system\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#9 Z:\website\sindakv2\sourceCode\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#10 {main}
+CRITICAL - 2026-09-26 04:09:19 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: No connection could be made because the target machine actively refused it
+[Method: CLI, Route: db:seed/ImportPegawaiSeeder]
+in SYSTEMPATH\Database\BaseConnection.php on line 606.
+ 1 SYSTEMPATH\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+ 3 SYSTEMPATH\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+ 4 SYSTEMPATH\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+ 5 SYSTEMPATH\CLI\Commands.php(72): CodeIgniter\Commands\Database\Seed->run([...])
+ 6 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', [...])
+ 7 SYSTEMPATH\Boot.php(444): CodeIgniter\CLI\Console->run()
+ 8 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+ 9 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-09-26 04:09:53 --> Error connecting to the database: mysqli_sql_exception: Host 'localhost' is not allowed to connect to this MariaDB server in Z:\website\sindakv2\sourceCode\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 Z:\website\sindakv2\sourceCode\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', 'root', Object(SensitiveParameterValue), 'db-sindak', 3306, '', 0)
+#1 Z:\website\sindakv2\sourceCode\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 Z:\website\sindakv2\sourceCode\system\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+#3 Z:\website\sindakv2\sourceCode\system\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+#4 Z:\website\sindakv2\sourceCode\system\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+#5 Z:\website\sindakv2\sourceCode\system\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+#6 Z:\website\sindakv2\sourceCode\system\CLI\Commands.php(72): CodeIgniter\Commands\Database\Seed->run(Array)
+#7 Z:\website\sindakv2\sourceCode\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', Array)
+#8 Z:\website\sindakv2\sourceCode\system\Boot.php(444): CodeIgniter\CLI\Console->run()
+#9 Z:\website\sindakv2\sourceCode\system\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#10 Z:\website\sindakv2\sourceCode\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#11 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Host 'localhost' is not allowed to connect to this MariaDB server in Z:\website\sindakv2\sourceCode\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 Z:\website\sindakv2\sourceCode\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 Z:\website\sindakv2\sourceCode\system\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+#2 Z:\website\sindakv2\sourceCode\system\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+#3 Z:\website\sindakv2\sourceCode\system\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+#4 Z:\website\sindakv2\sourceCode\system\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+#5 Z:\website\sindakv2\sourceCode\system\CLI\Commands.php(72): CodeIgniter\Commands\Database\Seed->run(Array)
+#6 Z:\website\sindakv2\sourceCode\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', Array)
+#7 Z:\website\sindakv2\sourceCode\system\Boot.php(444): CodeIgniter\CLI\Console->run()
+#8 Z:\website\sindakv2\sourceCode\system\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#9 Z:\website\sindakv2\sourceCode\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#10 {main}
+CRITICAL - 2026-09-26 04:09:53 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: Host 'localhost' is not allowed to connect to this MariaDB server
+[Method: CLI, Route: db:seed/ImportPegawaiSeeder]
+in SYSTEMPATH\Database\BaseConnection.php on line 606.
+ 1 SYSTEMPATH\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+ 3 SYSTEMPATH\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+ 4 SYSTEMPATH\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+ 5 SYSTEMPATH\CLI\Commands.php(72): CodeIgniter\Commands\Database\Seed->run([...])
+ 6 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', [...])
+ 7 SYSTEMPATH\Boot.php(444): CodeIgniter\CLI\Console->run()
+ 8 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+ 9 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
