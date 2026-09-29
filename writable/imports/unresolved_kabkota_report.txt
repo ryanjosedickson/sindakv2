@@ -1,4 +1,3 @@
-Jakarta (baris 22, provinsi: Daerah Khusus Ibukota Jakarta)
-Jakarta (baris 35, provinsi: Daerah Khusus Ibukota Jakarta)
-jakarta (baris 61, provinsi: Daerah Khusus Ibukota Jakarta)
-Bekasi Timur (baris 101, provinsi: )
+jakarta (baris 17, provinsi: Daerah Khusus Ibukota Jakarta)
+Jakarta (baris 77, provinsi: Daerah Khusus Ibukota Jakarta)
+Bekasi Timur (baris 155, provinsi: )

@@ -60,7 +60,7 @@ class KabupatenKotaSeeder extends Seeder
                 $this->db->table('kabupaten_kota')->insert([
                     'nama'       => $regency['name'],
                     'kode'       => (string) $regency['code'],
-                    'parent_id'  => $provinsi['id'],
+                    'parent_id'  => $provinsi['id_provinsi'],
                     'is_active'  => 1,
                     'created_at' => $now,
                     'updated_at' => $now,

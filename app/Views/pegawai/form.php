@@ -90,8 +90,8 @@
             <option value="">-- Pilih --</option>
             <?php
                 $jenjangPendidikanList = [
-                    'SD', 'SLTP/SMP Sederajat', 'SLTA/SMA Sederajat',
-                    'D-II', 'D-III', 'D-IV',
+                    'SD', 'SLTP/SMP SEDERAJAT', 'SLTA/SMA SEDERAJAT',
+                    'D II', 'Diploma III/Sarjana Muda', 'Diploma IV',
                     'S-1/Sarjana', 'S-2/Magister', 'S-3/Doktor',
                 ];
             ?>
@@ -100,14 +100,23 @@
             <?php endforeach; ?>
         </select><br><br>
 
+        <label for="tipe_jabatan">Tipe Jabatan</label><br>
+        <select id="tipe_jabatan" name="tipe_jabatan">
+            <option value="">-- Pilih --</option>
+            <?php foreach (['Jabatan Struktural', 'Jabatan Fungsional Umum', 'Jabatan Fungsional Tertentu'] as $val): ?>
+                <option value="<?= esc($val) ?>" <?= fieldValue('tipe_jabatan', $pegawai) === $val ? 'selected' : '' ?>><?= esc($val) ?></option>
+            <?php endforeach; ?>
+        </select><br><br>
+
         <?php
             // Dropdown lookup — pola sama untuk semua, jadi di-loop
             // supaya tidak menulis <select> yang sama 10x manual.
+            // 'tipe_jabatan' TIDAK ada di sini lagi — sudah jadi ENUM
+            // biasa di atas, bukan lookup table.
             $lookupFields = [
                 'level_jabatan_id'   => ['label' => 'Level Jabatan',  'list' => $lookups['level_jabatan']],
                 'pangkat_id'         => ['label' => 'Pangkat',        'list' => $lookups['pangkat']],
                 'golongan_ruang_id'  => ['label' => 'Golongan/Ruang', 'list' => $lookups['golongan_ruang']],
-                'tipe_jabatan_id'    => ['label' => 'Tipe Jabatan',   'list' => $lookups['tipe_jabatan']],
                 'tampil_jabatan_id'  => ['label' => 'Tampil Jabatan', 'list' => $lookups['tampil_jabatan']],
                 'unit_kerja_id'      => ['label' => 'Unit Kerja',     'list' => $lookups['unit_kerja']],
                 'satuan_kerja_id'    => ['label' => 'Satuan Kerja',   'list' => $lookups['satuan_kerja']],
@@ -122,7 +131,7 @@
             <select id="<?= $fieldName ?>" name="<?= $fieldName ?>">
                 <option value="">-- Pilih --</option>
                 <?php if (empty($info['list'])): ?>
-                    <option value="" disabled>(Data belum tersedia)</option>
+                    <option value="" disabled>(Data belum tersedia — menunggu referensi)</option>
                 <?php else: ?>
                     <?php foreach ($info['list'] as $item): ?>
                         <option value="<?= $item['id'] ?>"

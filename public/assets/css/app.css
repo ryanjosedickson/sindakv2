@@ -1,0 +1,288 @@
+/*
+ * SINDAK — Stylesheet layout dasar (header, navbar, footer).
+ * Warna utama #064e3b diambil dari brief & warna lambang Kemenag di logo.
+ */
+
+:root {
+    --color-primary: #064e3b;
+    --color-primary-dark: #043325;
+    --color-primary-light: #0b6b50;
+    --color-bg: #f3f4f6;
+    --color-surface: #ffffff;
+    --color-text: #1f2937;
+    --color-text-muted: #6b7280;
+    --color-border: #e5e7eb;
+    --header-height: 68px;
+    --navbar-height: 48px;
+    --font-sans: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: var(--font-sans);
+    color: var(--color-text);
+    background: var(--color-bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ===================== HEADER ===================== */
+.site-header {
+    height: var(--header-height);
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    position: sticky;
+    top: 0;
+    z-index: 30;
+}
+
+.site-header__logo img {
+    height: 40px;
+    display: block;
+}
+
+.site-header__nav {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+.site-header__link {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--color-text);
+    padding: 6px 2px;
+    border-bottom: 2px solid transparent;
+}
+
+.site-header__link:hover {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+}
+
+/* Dropdown nama pegawai */
+.user-menu { position: relative; }
+
+.user-menu__button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-text);
+    cursor: pointer;
+    padding: 6px 4px;
+}
+
+.user-menu__caret {
+    width: 9px;
+    height: 9px;
+    border-right: 2px solid var(--color-text-muted);
+    border-bottom: 2px solid var(--color-text-muted);
+    transform: rotate(45deg);
+    margin-top: -4px;
+    transition: transform .15s ease;
+}
+
+.user-menu.is-open .user-menu__caret { transform: rotate(-135deg); margin-top: 2px; }
+
+.user-menu__panel {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 10px);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.08);
+    min-width: 160px;
+    overflow: hidden;
+}
+
+.user-menu.is-open .user-menu__panel { display: block; }
+
+.user-menu__panel a {
+    display: block;
+    padding: 10px 16px;
+    font-size: 14px;
+    color: var(--color-text);
+}
+
+.user-menu__panel a:hover { background: var(--color-bg); }
+
+.user-menu__panel form { margin: 0; }
+
+.user-menu__panel button.link-like {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    font: inherit;
+    padding: 10px 16px;
+    font-size: 14px;
+    color: var(--color-text);
+    cursor: pointer;
+}
+
+.user-menu__panel button.link-like:hover { background: var(--color-bg); }
+
+/* ===================== NAVBAR (hamburger, hijau) ===================== */
+.site-navbar {
+    background: var(--color-primary);
+    height: var(--navbar-height);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    position: sticky;
+    top: var(--header-height);
+    z-index: 20;
+}
+
+.hamburger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    margin-left: -8px;
+}
+
+.hamburger__bar {
+    width: 22px;
+    height: 2px;
+    background: #ffffff;
+    display: block;
+    transition: transform .2s ease, opacity .2s ease;
+}
+
+.site-navbar.is-open .hamburger__bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.site-navbar.is-open .hamburger__bar:nth-child(2) { opacity: 0; }
+.site-navbar.is-open .hamburger__bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.navbar-panel {
+    display: none;
+    background: var(--color-primary-dark);
+    position: sticky;
+    top: calc(var(--header-height) + var(--navbar-height));
+    z-index: 19;
+}
+
+.navbar-panel.is-open { display: block; }
+
+.navbar-panel__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 10px 20px 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.navbar-panel__item {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px 16px;
+    border-radius: 6px;
+    background: rgba(255,255,255,.06);
+}
+
+.navbar-panel__item:hover { background: rgba(255,255,255,.16); }
+
+/* ===================== KONTEN ===================== */
+.page-content {
+    flex: 1;
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 28px 20px 48px;
+}
+
+.welcome-block h1 {
+    font-size: 22px;
+    margin: 0 0 4px;
+}
+
+.welcome-block p {
+    margin: 0 0 28px;
+    color: var(--color-text-muted);
+    font-size: 14px;
+}
+
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.stat-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 18px 20px;
+}
+
+.stat-card__label {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    margin-bottom: 6px;
+}
+
+.stat-card__value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.quick-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.quick-links a {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 12px 18px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.quick-links a:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+/* ===================== FOOTER ===================== */
+.site-footer {
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    padding: 14px 20px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--color-text-muted);
+}
+
+/* ===================== Responsif ===================== */
+@media (max-width: 640px) {
+    .site-header__nav { gap: 14px; }
+    .site-header__link:not(.user-menu) { display: none; }
+    .page-content { padding: 20px 14px 40px; }
+}

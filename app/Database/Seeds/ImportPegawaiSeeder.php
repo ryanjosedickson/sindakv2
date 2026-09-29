@@ -99,6 +99,9 @@ class ImportPegawaiSeeder extends Seeder
     private array $cache = [];
 
     private array $unresolvedKabKota = [];
+    private array $unparsedDates = [];
+    private array $invalidNip = [];
+    private array $seenNips = [];
     private int $totalRows = 0;
     private int $inserted = 0;
     private int $skipped = 0;
@@ -164,11 +167,18 @@ class ImportPegawaiSeeder extends Seeder
             $provinsiId = $provinsiNama ? $this->findIdByName('provinsi', $provinsiNama) : null;
 
             $kabKotaRaw = $get('Kab Kota');
-            $kabupatenKotaId = ($kabKotaRaw !== '')
+
+            // Beberapa baris di data sumber punya teks literal "null"/"n/a"/"-"
+            // di kolom ini (kemungkinan artefak formula/export yang gagal di
+            // Excel asli) — bukan nama tempat sungguhan, jadi diperlakukan
+            // sama seperti kosong (tidak perlu dicoba di-resolve/dilaporkan).
+            $isPlaceholderEmpty = in_array(strtolower(trim($kabKotaRaw)), ['', 'null', 'n/a', '-'], true);
+
+            $kabupatenKotaId = (! $isPlaceholderEmpty)
                 ? $this->resolveKabupatenKota($kabKotaRaw, $provinsiId)
                 : null;
 
-            if ($kabKotaRaw !== '' && $kabupatenKotaId === null) {
+            if (! $isPlaceholderEmpty && $kabupatenKotaId === null) {
                 $this->unresolvedKabKota[] = "{$kabKotaRaw} (baris " . ($this->totalRows + 1) . ", provinsi: {$provinsiNama})";
             }
 
@@ -178,8 +188,34 @@ class ImportPegawaiSeeder extends Seeder
                 continue; // nama lengkap wajib ada, skip baris tanpa nama
             }
 
+            // Kolom NIP OPSIONAL — kalau header 'NIP' ada di CSV dan diisi,
+            // dipakai (setelah validasi format 18 digit angka). Kalau
+            // headernya tidak ada sama sekali, atau kosong per-baris, NIP
+            // tetap NULL seperti sebelumnya (diisi manual belakangan).
+            $nip = null;
+            if (isset($colIndex['NIP'])) {
+                $nipRaw = trim($row[$colIndex['NIP']] ?? '');
+                if ($nipRaw !== '') {
+                    if (preg_match('/^\d{18}$/', $nipRaw)) {
+                        if (isset($this->seenNips[$nipRaw])) {
+                            // NIP dobel di dalam file itu sendiri — kalau tetap
+                            // dipaksa insert, unique constraint bakal gagalkan
+                            // SELURUH batch 200 baris ini, bukan cuma baris ini.
+                            // Lebih aman: baris kedua & seterusnya yang NIP-nya
+                            // sama di-null-kan, dicatat untuk dicek manual.
+                            $this->invalidNip[] = "'{$nipRaw}' DOBEL dengan baris {$this->seenNips[$nipRaw]} (baris " . ($this->totalRows + 1) . ", nama: {$namaLengkap})";
+                        } else {
+                            $nip = $nipRaw;
+                            $this->seenNips[$nipRaw] = $this->totalRows + 1;
+                        }
+                    } else {
+                        $this->invalidNip[] = "'{$nipRaw}' (baris " . ($this->totalRows + 1) . ", nama: {$namaLengkap})";
+                    }
+                }
+            }
+
             $batch[] = [
-                'nip'                => null,
+                'nip'                => $nip,
                 'nama_lengkap'       => $namaLengkap,
                 'kategori'           => $satker4 === 'Direktorat Jenderal Bimbingan Masyarakat Kristen' ? 'pusat' : 'daerah',
                 'agama'              => $get('Agama') ?: null,
@@ -189,15 +225,15 @@ class ImportPegawaiSeeder extends Seeder
                 'level_jabatan_id'   => $this->findIdByName('level_jabatan', $get('Level Jabatan')),
                 'pangkat_id'         => $this->findIdByName('pangkat', $get('Pangkat')),
                 'golongan_ruang_id'  => $this->findIdByName('golongan_ruang', $get('Gol Ruang')),
-                'tipe_jabatan_id'    => $this->findIdByName('tipe_jabatan', $get('Tipe Jabatan')),
+                'tipe_jabatan'       => $get('Tipe Jabatan') ?: null,
                 'tampil_jabatan_id'  => $this->findIdByName('tampil_jabatan', $get('Tampil Jabatan')),
                 'unit_kerja_id'      => $unitKerjaId,
                 'satuan_kerja_id'    => $satuanKerjaId,
                 'satuan_kerja_2_id'  => $satuanKerja2Id,
                 'provinsi_id'        => $provinsiId,
                 'kabupaten_kota_id'  => $kabupatenKotaId,
-                'tmt_cpns'           => $this->convertDate($get('Tmt Cpns')),
-                'tmt_pangkat'        => $this->convertDate($get('Tmt Pangkat')),
+                'tmt_cpns'           => $this->convertDate($get('Tmt Cpns'), $this->totalRows + 1, 'Tmt Cpns'),
+                'tmt_pangkat'        => $this->convertDate($get('Tmt Pangkat'), $this->totalRows + 1, 'Tmt Pangkat'),
                 'created_at'         => $now,
                 'updated_at'         => $now,
             ];
@@ -224,6 +260,20 @@ class ImportPegawaiSeeder extends Seeder
         echo "Berhasil di-insert: {$this->inserted}\n";
         echo "Dilewati (nama lengkap kosong): {$this->skipped}\n";
         echo "Kab/Kota TIDAK ke-resolve otomatis: " . count($this->unresolvedKabKota) . "\n";
+        echo "Tanggal TMT gagal di-parse: " . count($this->unparsedDates) . "\n";
+        echo "NIP format tidak valid (diabaikan, jadi NULL): " . count($this->invalidNip) . "\n";
+
+        if (! empty($this->invalidNip)) {
+            $reportPath = WRITEPATH . 'imports/invalid_nip_report.txt';
+            file_put_contents($reportPath, implode("\n", $this->invalidNip));
+            echo "Detail NIP tidak valid disimpan di: {$reportPath}\n";
+        }
+
+        if (! empty($this->unparsedDates)) {
+            $reportPath = WRITEPATH . 'imports/unparsed_dates_report.txt';
+            file_put_contents($reportPath, implode("\n", $this->unparsedDates));
+            echo "Detail tanggal gagal disimpan di: {$reportPath}\n";
+        }
 
         if (! empty($this->unresolvedKabKota)) {
             $reportPath = WRITEPATH . 'imports/unresolved_kabkota_report.txt';
@@ -245,13 +295,49 @@ class ImportPegawaiSeeder extends Seeder
         return null;
     }
 
-    private function convertDate(string $raw): ?string
+    /**
+     * Coba beberapa format tanggal yang umum, karena data hasil export
+     * Excel sering tidak konsisten (kadang '01-05-2025', kadang '1-5-2025'
+     * tanpa leading zero, kadang pakai '/', kadang malah sudah format
+     * MySQL 'Y-m-d' dari export yang berbeda). Format yang gagal semua
+     * dicatat ke laporan supaya kelihatan jelas, bukan diam-diam jadi NULL.
+     */
+    private function convertDate(string $raw, int $rowNumber, string $columnLabel): ?string
     {
         if ($raw === '') {
             return null;
         }
-        $date = \DateTime::createFromFormat('d-m-Y', $raw);
-        return $date ? $date->format('Y-m-d') : null;
+
+        // Parsing manual berbasis regex — sengaja TIDAK pakai
+        // DateTime::createFromFormat() lagi, karena perilakunya untuk
+        // format tanpa leading zero (misal '1/3/2022') ternyata tidak
+        // reliable/konsisten. Regex + checkdate() jauh lebih predictable.
+        //
+        // Terima separator '-' ATAU '/', dan hari/bulan boleh 1 atau 2
+        // digit (menangani '1/3/2022' maupun '01-03-2022').
+        if (preg_match('/^(\d{1,2})[\-\/](\d{1,2})[\-\/](\d{4})$/', $raw, $m)) {
+            $day = (int) $m[1];
+            $month = (int) $m[2];
+            $year = (int) $m[3];
+
+            if (checkdate($month, $day, $year)) {
+                return sprintf('%04d-%02d-%02d', $year, $month, $day);
+            }
+        }
+
+        // Fallback: format yang sudah 'Y-m-d' (misal dari sumber data lain)
+        if (preg_match('/^(\d{4})-(\d{1,2})-(\d{1,2})$/', $raw, $m)) {
+            $year = (int) $m[1];
+            $month = (int) $m[2];
+            $day = (int) $m[3];
+
+            if (checkdate($month, $day, $year)) {
+                return sprintf('%04d-%02d-%02d', $year, $month, $day);
+            }
+        }
+
+        $this->unparsedDates[] = "{$columnLabel}: '{$raw}' (baris {$rowNumber})";
+        return null;
     }
 
     private function normalizeProvinsi(string $raw): ?string
